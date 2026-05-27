@@ -5,12 +5,14 @@ mod offsets;
 mod driver_interface;
 mod eac_bypass;
 mod runtime_dumper;
+mod config;
 
 use memory::Process;
 use scanner::PatternScanner;
 use offsets::{RustOffsets, Vec3, Vec2};
 use driver_interface::DriverInterface;
 use eac_bypass::EACBypass;
+use config::{CheatConfig, Humanizer, SafetyMode, RecoilMethod};
 use std::thread;
 use std::time::Duration;
 
@@ -30,35 +32,47 @@ struct RustCheat {
     offsets: RustOffsets,
     game_assembly_base: usize,
     local_player: usize,
-    no_recoil_enabled: bool,
-    use_kernel_driver: bool,
+    config: CheatConfig,
+    humanizer: Humanizer,
 }
 
 impl RustCheat {
-    fn new(process: Process) -> Option<Self> {
+    fn new(process: Process, config: CheatConfig) -> Option<Self> {
         let offsets = RustOffsets::new();
         
-        // Try to load kernel driver first (for EAC bypass)
-        println!("[*] Attempting to load kernel driver...");
-        let driver = DriverInterface::new(process.pid);
-        let use_kernel_driver = driver.is_some();
-        
-        if use_kernel_driver {
-            println!("[+] Kernel driver loaded - EAC bypass active");
+        // Load driver only if needed (not needed for Legit mode)
+        let driver = if config.use_kernel_driver {
+            println!("[*] Attempting to load kernel driver...");
+            let drv = DriverInterface::new(process.pid);
+            if drv.is_some() {
+                println!("[+] Kernel driver loaded - EAC bypass active");
+            } else {
+                println!("[!] Kernel driver not found");
+                if matches!(config.no_recoil_method, RecoilMethod::MemoryPatch) {
+                    println!("[!] WARNING: MemoryPatch recoil needs driver!");
+                    println!("[!] Falling back to fallback mode (HIGH RISK)");
+                }
+            }
+            drv
         } else {
-            println!("[!] Kernel driver not found - using fallback mode (HIGHER DETECTION RISK)");
-            println!("[!] Load driver first for better protection!");
-        }
+            println!("[*] Running in LEGIT MODE - No driver needed");
+            println!("[+] Read-only operations (ESP) are safe");
+            None
+        };
         
         // EAC bypass helper
         let eac_bypass = EACBypass::new(process.handle);
         
-        // Wait for EAC startup scan to complete
-        EACBypass::wait_for_game_load();
+        // Wait for EAC startup scan ONLY if using driver
+        if config.use_kernel_driver {
+            EACBypass::wait_for_game_load();
+        }
         
         // Find GameAssembly.dll base
         let game_assembly_base = process.get_module_base("GameAssembly.dll")?;
         println!("[+] GameAssembly.dll: 0x{:X}", game_assembly_base);
+        
+        let humanizer = Humanizer::new(config.clone());
         
         Some(RustCheat {
             process,
@@ -67,8 +81,8 @@ impl RustCheat {
             offsets,
             game_assembly_base,
             local_player: 0,
-            no_recoil_enabled: true,
-            use_kernel_driver,
+            config,
+            humanizer,
         })
     }
     
@@ -189,17 +203,37 @@ impl RustCheat {
     }
     
     fn apply_no_recoil(&self) {
-        if !self.no_recoil_enabled || self.local_player == 0 {
+        // Check if recoil control is enabled
+        match self.config.no_recoil_method {
+            RecoilMethod::None => return,
+            RecoilMethod::Macro => {
+                // Macro recoil is handled by external script
+                // See macro_norecoil.md for Logitech G HUB setup
+                return;
+            },
+            RecoilMethod::Hardware => {
+                // MAKCU hardware handles recoil
+                // See src/makcu_interface.rs
+                return;
+            },
+            RecoilMethod::MemoryPatch => {
+                // Continue to memory patching below
+            }
+        }
+        
+        if self.local_player == 0 {
             return;
         }
         
-        // Polymorphic delay - changes pattern
-        EACBypass::polymorphic_sleep(50);
+        // Humanized delay (looks less robotic)
+        if self.config.humanization_enabled {
+            EACBypass::polymorphic_sleep(50);
+        }
         
         // Get PlayerInput
         if let Ok(player_input) = self.safe_read::<usize>(self.local_player + self.offsets.player_input) {
             if player_input != 0 {
-                // Zero out recoil angles (via kernel driver if available)
+                // Zero out recoil angles (via kernel driver)
                 let zero_vec = Vec3 { x: 0.0, y: 0.0, z: 0.0 };
                 let _ = self.safe_write(player_input + self.offsets.recoil_angles, zero_vec);
             }
@@ -234,27 +268,64 @@ fn is_admin() -> bool {
 
 fn main() {
     println!("╔══════════════════════════════════════════════╗");
-    println!("║   Rust EAC Bypass Cheat v3.0 - 2026         ║");
-    println!("║   ESP + No Recoil + Kernel Driver Support   ║");
+    println!("║   Rust EAC Bypass Cheat v3.1 - 2026         ║");
+    println!("║   LEGIT MODE for Maximum Safety             ║");
     println!("╚══════════════════════════════════════════════╝");
+    println!();
+    
+    // Load configuration
+    let config = CheatConfig::load();
+    
+    println!("[+] Configuration loaded:");
+    println!("    Mode: {:?}", config.mode);
+    println!("    ESP: {}", if config.esp_enabled { "✓" } else { "✗" });
+    println!("    No Recoil: {:?}", config.no_recoil_method);
+    println!("    Kernel Driver: {}", if config.use_kernel_driver { "✓" } else { "✗" });
+    println!("    Humanization: {}", if config.humanization_enabled { "✓" } else { "✗" });
+    println!();
+    
+    // Safety warnings based on mode
+    match config.mode {
+        SafetyMode::Legit => {
+            println!("[✓] LEGIT MODE - Maximum safety");
+            println!("    Detection risk: LOW");
+            println!("    Expected survival: 1-3+ months");
+            println!("    Features: ESP only, macro recoil");
+        },
+        SafetyMode::Rage => {
+            println!("[!] RAGE MODE - Higher detection risk");
+            println!("    Detection risk: MEDIUM");
+            println!("    Expected survival: 1-2 weeks");
+            println!("    Recommendation: Use alt account only");
+        },
+        SafetyMode::DMA => {
+            println!("[✓] DMA MODE - Minimal detection");
+            println!("    Detection risk: MINIMAL");
+            println!("    Expected survival: Months to years");
+        },
+    }
     println!();
     
     // Check for admin rights
     if !is_admin() {
-        println!("[!] WARNING: Not running as administrator!");
-        println!("[!] Driver loading will fail without admin rights");
-        println!();
+        if config.use_kernel_driver {
+            println!("[!] WARNING: Not running as administrator!");
+            println!("[!] Driver loading will fail without admin rights");
+            println!();
+        }
     }
     
-    // Optional: HWID spoof before connecting
-    println!("[?] Run HWID spoofer? (prevents hardware bans)");
-    println!("    Type 'yes' to spoof, or press Enter to skip");
-    let mut input = String::new();
-    std::io::stdin().read_line(&mut input).ok();
-    if input.trim().to_lowercase() == "yes" {
-        eac_bypass::hwid_spoof::full_spoof();
-        println!("[!] Restart system before playing for spoof to take effect");
-        return;
+    // HWID spoof option (only if using memory writes)
+    if matches!(config.no_recoil_method, RecoilMethod::MemoryPatch) {
+        println!("[?] Run HWID spoofer? (prevents hardware bans)");
+        println!("    Type 'yes' to spoof, or press Enter to skip");
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).ok();
+        if input.trim().to_lowercase() == "yes" {
+            eac_bypass::hwid_spoof::full_spoof();
+            println!("[!] Restart system before playing for spoof to take effect");
+            return;
+        }
     }
     
     println!("[+] Waiting for RustClient.exe...");
@@ -267,7 +338,7 @@ fn main() {
         thread::sleep(Duration::from_secs(2));
     };
     
-    let mut cheat = match RustCheat::new(process) {
+    let mut cheat = match RustCheat::new(process, config.clone()) {
         Some(c) => c,
         None => {
             println!("[-] Failed to initialize cheat");
@@ -278,12 +349,20 @@ fn main() {
     println!();
     println!("[+] Cheat initialized");
     println!("[+] Active Features:");
-    println!("    ✓ ESP (Player positions, health, distance)");
-    println!("    ✓ No Recoil (kernel-mode)");
-    if cheat.use_kernel_driver {
-        println!("    ✓ EAC Bypass (kernel driver active)");
-    } else {
-        println!("    ✗ EAC Bypass (FALLBACK MODE - HIGH RISK)");
+    if config.esp_enabled {
+        println!("    ✓ ESP (Player positions, health, distance)");
+    }
+    match config.no_recoil_method {
+        RecoilMethod::None => println!("    ✗ No Recoil (disabled)"),
+        RecoilMethod::Macro => println!("    ✓ No Recoil (Logitech macro - SAFE)"),
+        RecoilMethod::Hardware => println!("    ✓ No Recoil (MAKCU hardware - SAFE)"),
+        RecoilMethod::MemoryPatch => {
+            if cheat.driver.is_some() {
+                println!("    ✓ No Recoil (kernel driver - MEDIUM RISK)");
+            } else {
+                println!("    ⚠ No Recoil (fallback - HIGH RISK)");
+            }
+        },
     }
     println!();
     
@@ -296,18 +375,28 @@ fn main() {
         println!("[-] Could not find LocalPlayer - ESP will be limited");
     }
     
-    // Main cheat loop
+    // Main cheat loop with humanization
+    println!();
+    println!("[+] Cheat running... Press Ctrl+C to exit");
+    println!();
+    
     let mut tick = 0;
     loop {
-        // Apply no recoil every tick
+        // Apply no recoil (if enabled)
         cheat.apply_no_recoil();
         
-        // Update ESP every 500ms
-        if tick % 5 == 0 {
-            let players = cheat.get_players();
-            if !players.is_empty() {
-                cheat.draw_esp(&players);
+        // Update ESP with humanized timing
+        if config.esp_enabled && tick % 5 == 0 {
+            // Random skip (looks human)
+            if !cheat.humanizer.should_skip_esp_frame() {
+                let players = cheat.get_players();
+                if !players.is_empty() {
+                    cheat.draw_esp(&players);
+                }
             }
+            
+            // Humanized delay between ESP updates
+            cheat.humanizer.esp_update_delay();
         }
         
         tick += 1;

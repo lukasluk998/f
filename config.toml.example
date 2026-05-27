@@ -1,0 +1,150 @@
+# Rust Cheat Configuration
+# Copy this to config.toml and edit
+
+# Safety mode: "Legit", "Rage", or "DMA"
+# - Legit: Maximum safety, ESP only, macro recoil (1-3+ months)
+# - Rage: Full features, memory writes (1-2 weeks)  
+# - DMA: For DMA hardware users (months+)
+mode = "Legit"
+
+# ═══════════════════════════════════════
+# FEATURES
+# ═══════════════════════════════════════
+
+# ESP - Shows player positions, health, distance
+# Detection risk: LOW (read-only)
+esp_enabled = true
+
+# No recoil method: "None", "Macro", "Hardware", "MemoryPatch"
+# - None: Disabled (safest)
+# - Macro: Logitech/Razer mouse script (undetectable)
+# - Hardware: MAKCU device (undetectable)
+# - MemoryPatch: Kernel driver writes (detectable)
+no_recoil_method = "Macro"
+
+# Aimbot - Automatic aim assist
+# Detection risk: VERY HIGH (not recommended)
+aimbot_enabled = false
+
+# Item ESP - Shows loot, resources
+# Detection risk: MEDIUM (staring at loot = suspicious)
+item_esp_enabled = false
+
+# ═══════════════════════════════════════
+# DRIVER SETTINGS
+# ═══════════════════════════════════════
+
+# Use kernel driver for memory access
+# Required for: MemoryPatch recoil
+# Not needed for: Legit mode, DMA mode
+use_kernel_driver = false
+
+# Driver path (change if using custom location)
+driver_path = "C:\\Windows\\System32\\drivers\\RustDriver.sys"
+
+# ═══════════════════════════════════════
+# HUMANIZATION (Makes you look natural)
+# ═══════════════════════════════════════
+
+# Enable humanization (RECOMMENDED)
+humanization_enabled = true
+
+# Random delays between actions
+random_delays = true
+
+# Chance to miss shots (0.0 - 1.0)
+# 0.15 = miss 15% of shots (looks human)
+# 0.0 = never miss (suspicious)
+miss_shot_chance = 0.15
+
+# Reaction delay in milliseconds [min, max]
+# Human reaction time: 200-400ms
+# Pro players: 150-250ms
+# Cheater (obvious): <100ms
+reaction_delay_ms = [200, 400]
+
+# ESP update interval [min, max]
+# Slower = less suspicious
+# Faster = more responsive but obvious
+esp_update_interval_ms = [300, 500]
+
+# ═══════════════════════════════════════
+# GAMEPLAY LIMITS (Anti-detection)
+# ═══════════════════════════════════════
+
+# Maximum K/D ratio to maintain
+# Above this, play more carefully or die intentionally
+# Normal player: 1-2
+# Good player: 2-4
+# Obvious cheater: 10+
+max_kd_ratio = 3.0
+
+# Intentionally die sometimes
+# Looks more natural, prevents 100% win rate
+intentional_deaths = true
+
+# Check corners naturally (look around)
+# Real players don't stare straight ahead
+check_corners_naturally = true
+
+# Max session hours before auto-exit
+# Long sessions with perfect stats = flagged
+# Recommended: 2-4 hours
+max_session_hours = 4
+
+# ═══════════════════════════════════════
+# SERVER PREFERENCES
+# ═══════════════════════════════════════
+
+# Avoid official Facepunch servers
+# They have stricter anti-cheat
+avoid_official_servers = true
+
+# Prefer community servers
+# Usually more relaxed, fewer reports
+prefer_community_servers = true
+
+# Maximum server population
+# High-pop = more eyes on you = more reports
+# Recommended: <100 for safety
+max_server_population = 100
+
+# ═══════════════════════════════════════
+# EXAMPLE CONFIGURATIONS
+# ═══════════════════════════════════════
+
+# ┌─────────────────────────────────────┐
+# │ LEGIT MODE (Recommended for mains)  │
+# └─────────────────────────────────────┘
+# mode = "Legit"
+# esp_enabled = true
+# no_recoil_method = "Macro"
+# aimbot_enabled = false
+# use_kernel_driver = false
+# humanization_enabled = true
+# max_kd_ratio = 3.0
+# Expected survival: 1-3+ months
+
+# ┌─────────────────────────────────────┐
+# │ RAGE MODE (For alt accounts)        │
+# └─────────────────────────────────────┘
+# mode = "Rage"
+# esp_enabled = true
+# no_recoil_method = "MemoryPatch"
+# item_esp_enabled = true
+# use_kernel_driver = true
+# humanization_enabled = true
+# max_kd_ratio = 5.0
+# Expected survival: 1-2 weeks
+
+# ┌─────────────────────────────────────┐
+# │ DMA MODE (Hardware users)            │
+# └─────────────────────────────────────┘
+# mode = "DMA"
+# esp_enabled = true
+# no_recoil_method = "Macro"
+# item_esp_enabled = true
+# use_kernel_driver = false
+# humanization_enabled = true
+# max_kd_ratio = 4.0
+# Expected survival: Months to years
