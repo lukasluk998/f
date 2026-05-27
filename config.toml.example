@@ -7,6 +7,61 @@
 mode = "Legit"
 
 # ═══════════════════════════════════════
+# ESP OPTIMIZATION (New in v3.2)
+# ═══════════════════════════════════════
+
+# Maximum ESP render distance (meters)
+# Farther players = more suspicious staring
+# Recommended: 200-300m
+max_esp_distance = 300.0
+
+# Enable distance-based LOD (Level of Detail)
+# Close: full info, Far: less info
+# Reduces CPU usage and looks more natural
+esp_distance_lod = true
+
+# Enable FOV culling (only show players you can see)
+# Don't render players behind you
+# More realistic behavior
+esp_fov_culling = true
+
+# FOV angle for culling (degrees)
+# 90 = normal, 180 = full view
+# Recommended: 90-120
+esp_fov_angle = 90.0
+
+# Enable player data caching
+# Reduces memory reads = better performance
+# SAFE (read-only)
+esp_caching = true
+
+# ═══════════════════════════════════════
+# RECOIL HELPER (Read-Only, 100% SAFE)
+# ═══════════════════════════════════════
+
+# Enable visual recoil compensation guide
+# Shows where to aim to counter recoil
+# NO MEMORY WRITES - completely safe
+recoil_helper_enabled = true
+
+# Compensation strength (0.0 - 1.0)
+# 0.0 = no help, 1.0 = full compensation
+# Recommended: 0.7-0.9 (looks more natural)
+recoil_compensation_strength = 0.8
+
+# Show weapon info overlay
+# Displays: weapon name, shot count, RPM
+recoil_show_weapon_info = true
+
+# Show recoil pattern visualization
+# Displays the full spray pattern
+recoil_show_pattern = false
+
+# Crosshair color (hex)
+# 0x00FF00 = green, 0xFF0000 = red
+recoil_crosshair_color = 0x00FF00
+
+# ═══════════════════════════════════════
 # FEATURES
 # ═══════════════════════════════════════
 
@@ -117,6 +172,11 @@ max_server_population = 100
 # └─────────────────────────────────────┘
 # mode = "Legit"
 # esp_enabled = true
+# esp_distance_lod = true
+# esp_fov_culling = true
+# max_esp_distance = 300.0
+# recoil_helper_enabled = true
+# recoil_compensation_strength = 0.8
 # no_recoil_method = "Macro"
 # aimbot_enabled = false
 # use_kernel_driver = false
@@ -129,6 +189,9 @@ max_server_population = 100
 # └─────────────────────────────────────┘
 # mode = "Rage"
 # esp_enabled = true
+# max_esp_distance = 500.0
+# esp_distance_lod = false
+# recoil_helper_enabled = false
 # no_recoil_method = "MemoryPatch"
 # item_esp_enabled = true
 # use_kernel_driver = true

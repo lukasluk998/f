@@ -40,6 +40,20 @@ pub struct CheatConfig {
     pub aimbot_enabled: bool,
     pub item_esp_enabled: bool,
     
+    // ESP Optimization (v3.2)
+    pub max_esp_distance: f32,
+    pub esp_distance_lod: bool,
+    pub esp_fov_culling: bool,
+    pub esp_fov_angle: f32,
+    pub esp_caching: bool,
+    
+    // Recoil Helper (v3.2 - Read-only)
+    pub recoil_helper_enabled: bool,
+    pub recoil_compensation_strength: f32,
+    pub recoil_show_weapon_info: bool,
+    pub recoil_show_pattern: bool,
+    pub recoil_crosshair_color: u32,
+    
     // Driver
     pub use_kernel_driver: bool,
     pub driver_path: String,
@@ -82,6 +96,20 @@ impl CheatConfig {
             aimbot_enabled: false,                  // Too obvious
             item_esp_enabled: false,                // Too obvious
             
+            // ESP Optimization (v3.2)
+            max_esp_distance: 300.0,
+            esp_distance_lod: true,
+            esp_fov_culling: true,
+            esp_fov_angle: 90.0,
+            esp_caching: true,
+            
+            // Recoil Helper (v3.2)
+            recoil_helper_enabled: true,
+            recoil_compensation_strength: 0.8,
+            recoil_show_weapon_info: true,
+            recoil_show_pattern: false,
+            recoil_crosshair_color: 0x00FF00,
+            
             // Driver - Not needed for read-only
             use_kernel_driver: false,
             driver_path: String::new(),
@@ -117,6 +145,20 @@ impl CheatConfig {
             no_recoil_method: RecoilMethod::MemoryPatch,
             aimbot_enabled: false,  // Still disabled (too obvious)
             item_esp_enabled: true,
+            
+            // ESP Optimization (v3.2) - Less strict
+            max_esp_distance: 500.0,
+            esp_distance_lod: false,  // Show full detail always
+            esp_fov_culling: false,   // Show all players
+            esp_fov_angle: 180.0,
+            esp_caching: true,
+            
+            // Recoil Helper (v3.2) - Not needed with memory patch
+            recoil_helper_enabled: false,
+            recoil_compensation_strength: 1.0,
+            recoil_show_weapon_info: false,
+            recoil_show_pattern: false,
+            recoil_crosshair_color: 0xFF0000,
             
             // Driver - Required for memory writes
             use_kernel_driver: true,
