@@ -2,6 +2,24 @@
 
 **Full-featured external cheat for Rust with Easy Anti-Cheat bypass**
 
+## ⚡ NEW in v3.0: Runtime Offset Dumper
+
+**No more manual Il2CppDumper!** Automatically finds all offsets from running game.
+
+```bash
+# After game updates, just run:
+cargo run --bin dump_offsets
+```
+
+✅ Pattern-based scanning  
+✅ Auto-generates Rust code  
+✅ Saves to resources repo  
+✅ One command updates everything  
+
+See [RUNTIME_DUMPER.md](RUNTIME_DUMPER.md) for full docs.
+
+---
+
 ## Features
 
 ### Core Cheat Features
@@ -89,7 +107,18 @@ sc start RustDriver
 
 Or use OSR Driver Loader.
 
-### 3. Find Game Offsets
+### 3. Find Game Offsets (AUTOMATED!)
+
+**Option A: Runtime Dumper (Recommended)**
+
+```bash
+# Start Rust game and join server
+cargo run --bin dump_offsets
+
+# Offsets auto-updated in src/offsets.rs!
+```
+
+**Option B: Manual (Il2CppDumper)**
 
 Offsets change with every game update. Use Il2CppDumper:
 
@@ -100,7 +129,7 @@ Offsets change with every game update. Use Il2CppDumper:
 
 Update `src/offsets.rs` with values from `dump.cs`.
 
-See `find_offsets.md` for detailed guide.
+See `find_offsets.md` for detailed guide or **use runtime dumper** (much easier!).
 
 ### 4. Build Cheat
 
@@ -250,6 +279,19 @@ cd driver
 
 ## Updating After Game Patch
 
+**EASY MODE (v3.0):**
+```bash
+# 1. Start Rust and join server
+# 2. Run dumper
+cargo run --bin dump_offsets
+
+# 3. Rebuild
+cargo build --release
+
+# Done! Offsets updated automatically.
+```
+
+**Manual mode (backup):**
 1. Re-dump offsets with Il2CppDumper
 2. Update `src/offsets.rs`
 3. Find new LocalPlayer pattern (x64dbg)

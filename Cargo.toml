@@ -1,10 +1,25 @@
 [package]
-name = "rust-game-cheat"
-version = "0.1.0"
+name = "f"
+version = "3.0.0"
 edition = "2021"
+
+[[bin]]
+name = "rust-game-cheat"
+path = "src/main.rs"
+
+[[bin]]
+name = "dump_offsets"
+path = "src/bin/dump_offsets.rs"
 
 [dependencies]
 winapi = { version = "0.3", features = ["winuser", "processthreadsapi", "memoryapi", "handleapi", "tlhelp32", "psapi", "wingdi", "fileapi", "ioapiset", "impl-default"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = "0.4"
+
+[lib]
+name = "f"
+path = "src/lib.rs"
 
 [profile.release]
 opt-level = 3

@@ -4,6 +4,7 @@ mod overlay;
 mod offsets;
 mod driver_interface;
 mod eac_bypass;
+mod runtime_dumper;
 
 use memory::Process;
 use scanner::PatternScanner;
