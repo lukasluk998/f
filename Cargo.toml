@@ -1,6 +1,6 @@
 [package]
 name = "f"
-version = "3.0.0"
+version = "3.4.0"
 edition = "2021"
 
 [[bin]]
@@ -12,7 +12,7 @@ name = "dump_offsets"
 path = "src/bin/dump_offsets.rs"
 
 [dependencies]
-winapi = { version = "0.3", features = ["winuser", "processthreadsapi", "memoryapi", "handleapi", "tlhelp32", "psapi", "wingdi", "fileapi", "ioapiset", "impl-default"] }
+winapi = { version = "0.3", features = ["winuser", "winnt", "processthreadsapi", "memoryapi", "handleapi", "tlhelp32", "psapi", "wingdi", "fileapi", "ioapiset", "debugapi", "impl-default"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 chrono = "0.4"
