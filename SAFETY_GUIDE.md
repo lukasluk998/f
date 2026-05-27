@@ -21,7 +21,6 @@
 - ✅ "Legit" play style
 
 ### MINIMAL RISK (Rarely detected)
-- ✅ DMA hardware
 - ✅ Audio radar (sound analysis)
 - ✅ External crosshair overlay
 - ✅ No game memory access
@@ -257,35 +256,6 @@ fn should_update_esp() -> bool {
 
 ---
 
-## 🚀 DMA SETUP (Zero Detection)
-
-For absolute safety, use DMA hardware:
-
-### What is DMA?
-- PCIe card in second PC
-- Reads RAM directly via DMA
-- Cheat runs on second PC
-- Zero software on gaming PC
-
-### Hardware Needed
-- Squirrel DMA board (~$300)
-- OR PCILeech (~$150)
-- Second PC (can be laptop)
-- PCIe cable
-
-### Why Undetectable?
-- No software on gaming PC
-- Physical hardware read
-- OS doesn't see any access
-- EAC has zero visibility
-
-### DMA Resources
-- https://github.com/ufrisk/pcileech
-- https://github.com/ufrisk/MemProcFS
-- r/dma_cheats (Reddit)
-
----
-
 ## 📋 DETECTION METHODS EAC USES
 
 ### 1. Memory Write Detection
@@ -383,11 +353,6 @@ Save as `config.toml` and load in cheat.
    - If no ban → probably safe
    - If banned → tweak settings
 
-5. **Ultimate Setup**
-   - DMA hardware ($300)
-   - Literally undetectable
-   - Worth it for main account
-
 ---
 
 ## 📞 Quick Decision Tree
@@ -397,9 +362,6 @@ Save as `config.toml` and load in cheat.
 
 **Want full features?**
 → Use kernel driver but expect 1-2 week lifespan
-
-**Want zero detection?**
-→ Buy DMA hardware ($300)
 
 **Just testing?**
 → Use alt account, full features, don't care about ban

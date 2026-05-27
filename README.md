@@ -250,17 +250,7 @@ Even with all protections:
 |--------|---------------|------|------------|
 | This cheat | Medium | Free | Medium |
 | Premium private ($50-100/mo) | Low | $$$ | Low |
-| DMA hardware | Very Low | $300-1000 | High |
 | Macro-based (mouse) | Minimal | Free | Low |
-
-## Advanced: DMA Alternative
-
-For near-zero detection:
-- Use DMA card (Squirrel, PCILeech)
-- Physical hardware reads RAM
-- Cheat runs on second PC
-- Zero software footprint
-- **Cost:** $300-1000
 
 ## Building from Source
 

@@ -12,11 +12,6 @@ pub enum SafetyMode {
     /// Detection risk: MEDIUM
     /// Expected survival: 1-2 weeks
     Rage,
-    
-    /// DMA hardware support
-    /// Detection risk: MINIMAL
-    /// Expected survival: Months to years
-    DMA,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -147,42 +142,7 @@ impl CheatConfig {
         }
     }
     
-    /// DMA MODE - For DMA hardware users
-    /// Minimal detection risk, full features
-    pub fn dma_mode() -> Self {
-        Self {
-            mode: SafetyMode::DMA,
-            
-            // Features - Full ESP, no writes needed
-            esp_enabled: true,
-            no_recoil_method: RecoilMethod::Macro,  // Still use macro (safest)
-            aimbot_enabled: false,
-            item_esp_enabled: true,
-            
-            // Driver - DMA doesn't need driver
-            use_kernel_driver: false,
-            driver_path: String::new(),
-            
-            // Humanization - Moderate
-            humanization_enabled: true,
-            random_delays: true,
-            miss_shot_chance: 0.10,
-            reaction_delay_ms: (150, 300),
-            esp_update_interval_ms: (200, 400),
-            
-            // Gameplay limits - Moderate
-            max_kd_ratio: 4.0,
-            intentional_deaths: true,
-            check_corners_naturally: true,
-            max_session_hours: 6,
-            
-            // Server preferences
-            avoid_official_servers: false,  // DMA can handle official
-            prefer_community_servers: false,
-            max_server_population: 250,
-        }
-    }
-    
+
     /// Load config from file, or use default
     pub fn load() -> Self {
         match std::fs::read_to_string("config.toml") {
