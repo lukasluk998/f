@@ -47,6 +47,13 @@ pub struct CheatConfig {
     pub esp_fov_angle: f32,
     pub esp_caching: bool,
     
+    // Advanced Safety Features (v3.3)
+    pub external_overlay_enabled: bool,     // Use external window overlay (SAFER)
+    pub randomized_reads: bool,             // Randomize read patterns (SAFER)
+    pub memory_batching: bool,              // Batch reads for efficiency (SAFER)
+    pub screenshot_protection: bool,        // Hide overlay during screenshots (SAFER)
+    pub screenshot_detection_strategy: String, // "None", "Basic", "Advanced", "Paranoid"
+    
     // Recoil Helper (v3.2 - Read-only)
     pub recoil_helper_enabled: bool,
     pub recoil_compensation_strength: f32,
@@ -103,6 +110,13 @@ impl CheatConfig {
             esp_fov_angle: 90.0,
             esp_caching: true,
             
+            // Advanced Safety Features (v3.3)
+            external_overlay_enabled: true,      // External overlay = SAFER
+            randomized_reads: true,              // Randomized patterns = SAFER
+            memory_batching: true,               // Batch reads = SAFER + FASTER
+            screenshot_protection: true,         // Hide during screenshots = SAFER
+            screenshot_detection_strategy: "Basic".to_string(),
+            
             // Recoil Helper (v3.2)
             recoil_helper_enabled: true,
             recoil_compensation_strength: 0.8,
@@ -152,6 +166,13 @@ impl CheatConfig {
             esp_fov_culling: false,   // Show all players
             esp_fov_angle: 180.0,
             esp_caching: true,
+            
+            // Advanced Safety Features (v3.3) - Still use them for safety
+            external_overlay_enabled: true,      // Still use external overlay
+            randomized_reads: true,              // Still randomize
+            memory_batching: true,               // Still batch
+            screenshot_protection: true,         // Still protect
+            screenshot_detection_strategy: "Paranoid".to_string(), // Extra paranoid
             
             // Recoil Helper (v3.2) - Not needed with memory patch
             recoil_helper_enabled: false,

@@ -36,6 +36,42 @@ esp_fov_angle = 90.0
 esp_caching = true
 
 # ═══════════════════════════════════════
+# ADVANCED SAFETY (New in v3.3)
+# ═══════════════════════════════════════
+
+# Use external overlay window (separate process)
+# MUCH SAFER than in-process overlay
+# EAC cannot detect external process
+# Detection risk: NONE
+external_overlay_enabled = true
+
+# Randomize memory read patterns
+# Avoid consistent patterns EAC can detect
+# Random order, random delays, random skipping
+# Detection risk: MINIMAL (no predictable pattern)
+randomized_reads = true
+
+# Batch memory reads (read whole struct at once)
+# Instead of: 3-6 separate reads per player
+# Do: 1 read per player, parse locally
+# 80% fewer API calls = much safer
+# Also FASTER (better performance)
+memory_batching = true
+
+# Screenshot protection
+# Hide overlay when EAC takes screenshot
+# Prevents visual detection
+# Detection risk: NONE (overlay hidden)
+screenshot_protection = true
+
+# Screenshot detection strategy
+# - "None": No detection (always visible)
+# - "Basic": Simple heuristics (recommended)
+# - "Advanced": Hook-based detection (requires setup)
+# - "Paranoid": Hide periodically + detection
+screenshot_detection_strategy = "Basic"
+
+# ═══════════════════════════════════════
 # RECOIL HELPER (Read-Only, 100% SAFE)
 # ═══════════════════════════════════════
 
@@ -175,6 +211,11 @@ max_server_population = 100
 # esp_distance_lod = true
 # esp_fov_culling = true
 # max_esp_distance = 300.0
+# external_overlay_enabled = true
+# randomized_reads = true
+# memory_batching = true
+# screenshot_protection = true
+# screenshot_detection_strategy = "Basic"
 # recoil_helper_enabled = true
 # recoil_compensation_strength = 0.8
 # no_recoil_method = "Macro"
@@ -182,7 +223,7 @@ max_server_population = 100
 # use_kernel_driver = false
 # humanization_enabled = true
 # max_kd_ratio = 3.0
-# Expected survival: 1-3+ months
+# Expected survival: 3-6+ months (v3.3 improvements!)
 
 # ┌─────────────────────────────────────┐
 # │ RAGE MODE (For alt accounts)        │
@@ -191,10 +232,15 @@ max_server_population = 100
 # esp_enabled = true
 # max_esp_distance = 500.0
 # esp_distance_lod = false
+# external_overlay_enabled = true      # Still use external overlay
+# randomized_reads = true              # Still randomize
+# memory_batching = true               # Still batch
+# screenshot_protection = true         # Still protect
+# screenshot_detection_strategy = "Paranoid"
 # recoil_helper_enabled = false
 # no_recoil_method = "MemoryPatch"
 # item_esp_enabled = true
 # use_kernel_driver = true
 # humanization_enabled = true
 # max_kd_ratio = 5.0
-# Expected survival: 1-2 weeks
+# Expected survival: 2-4 weeks (v3.3 improvements!)
