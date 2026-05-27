@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-winapi = { version = "0.3", features = ["winuser", "processthreadsapi", "memoryapi", "handleapi", "tlhelp32", "psapi", "wingdi"] }
+winapi = { version = "0.3", features = ["winuser", "processthreadsapi", "memoryapi", "handleapi", "tlhelp32", "psapi", "wingdi", "fileapi", "ioapiset", "impl-default"] }
 
 [profile.release]
 opt-level = 3
